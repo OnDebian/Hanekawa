@@ -1,0 +1,33 @@
+{
+  "name": "hanekawa",
+  "version": "1.0.0",
+  "description": "Music bot for Discord written in Javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OnDebian/Hanekawa.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "javascript",
+    "nodejs",
+    "hanekawa",
+    "bakemonogatari"
+  ],
+  "author": "OnDebian",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/OnDebian/Hanekawa/issues"
+  },
+  "homepage": "https://github.com/OnDebian/Hanekawa#readme",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "opusscript": "0.0.6",
+    "request": "^2.88.0",
+    "ytdl-core": "^0.29.1"
+  }
+}
