@@ -2,28 +2,29 @@ const
     config = require("./config"),
     discord = require("discord.js"),
     fs = require("fs"),
+    path = require("path");
     commands = new discord.Collection();
 
 client = new discord.Client();
 
-fs.readdir("./events/", (err, files) => {
+fs.readdir(path.resolve(__dirname, "./events"), (err, files) => {
     if (err) throw new Error("Unable to load events");
     console.log("Loading events ...");
     files.forEach(async file => {
         if (!file.endsWith(".js")) return;
-        const event = require(`./events/${file}`);
+        const event = require(`${path.resolve(__dirname, "./events")}/${file}`);
         let eventName = file.split(".")[0];
         console.log(`${eventName} loaded`);
         client.on(eventName, event.bind(null, client));
     });
 });
 
-fs.readdir("./commands/", (err, files) => {
+fs.readdir(path.resolve(__dirname, "./commands"), (err, files) => {
     if (err) throw new Error("Unable to load commands");
     console.log("Loading commands ...");
     files.forEach(async file => {
         if (!file.endsWith(".js")) return;
-        const command = require(`./commands/${file}`);
+        const command = require(`${path.resolve(__dirname, "./commands")}/${file}`);
         commands.set(command.name, command);
         console.log(`${command.name} loaded`);
     });
@@ -40,6 +41,7 @@ client.on("message", (message) => {
 
     if (!command) return;
     if (!message.guild && command.guildOnly) return message.reply("I'm unable to execute this here !");
+    if (!config.global.admins.includes(message.author.id) && command.adminsOnly) return message.reply("Only administrator of this bot can use this command");
     try {
         command.execute(client, message, args);
     } catch (error) {

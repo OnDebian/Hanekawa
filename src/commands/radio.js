@@ -1,55 +1,36 @@
 const
     config = require("../config"),
-    { RichEmbed, Collection } = require("discord.js"),
-    radios = new Collection(config.radios);
-
-config.radios.forEach(radio => {
-    radios.set(radio.name, {
-        title: radio.title,
-        url: radio.url
-    });
-});
+    player = require("../modules/player"),
+    { RichEmbed } = require("discord.js");
 
 module.exports = {
 
     name: "radio",
     aliases: ["stream"],
-    usage: "radio <list/radio name>",
     guildOnly: true,
+    adminsOnly: false,
     execute: (client, message, args) => {
-
-
-        if (!args[0]) return message.reply("No radio provided");
-        if (args[0] == "list") return message.channel.send(
-            new RichEmbed()
-                .setAuthor("Radios - List of avaliable radios", client.user.avatarURL)
-                .setDescription(config.radios.map(r => `${r.title} - ${r.name}`).join("\n"))
-                .setTimestamp(new Date())
-                .setFooter(`Executed by ${message.author.tag}`)
-                .setColor(config.global.color)
-        );
-        if (!radios.get(args[0])) return message.reply("Invalid radio provided");
-        if (!message.member.voiceChannel) return message.reply("Please join a voice channel first");
+        if(!args[0]) return message.reply("No radio provided");
+        let radio = player.getRadios().get(args[0]);
+        if(!radio) return message.reply("Invalid radio provided");
+        if(!message.member.voiceChannel) return message.reply("You are not in a voice channel");
+        if(player.getQueue(message.guild.id).length > 0) player.emptyQueue(message.guild.id);
+        if(message.guild.member(client.user).voiceChannel && message.guild.member(client.user).voiceChannel.connection) message.guild.member(client.user).voiceChannel.connection.dispatcher.end();
         message.member.voiceChannel.join()
             .then(conn => {
-                let dispacher = conn.playArbitraryInput(radios.get(args[0]).url);
+                let playerConfig = player.getPlayerConfig(message.guild.id);
+                let dispatcher = conn.playArbitraryInput(radio.url, {volume: parseInt(playerConfig.volume)/100});
                 message.channel.send(
                     new RichEmbed()
-                        .setDescription(`Stream ${radios.get(args[0]).title} radio`)
+                        .setDescription(`Streaming ${radio.title}'s radio ♪`)
                         .setColor(config.global.color)
                 );
-                dispacher.on("end", () => message.guild.member(client.user).voiceChannel.leave());
-                dispacher.on("error", () => {
-                    message.guild.member(client.user).voiceChannel.leave();
-                    console.log(error);
-                    message.reply("Unable to execute action, this bug was reported to my developper !");
-                });
+                dispatcher.on("end", () => message.guild.member(client.user).voiceChannel.leave());
             })
             .catch(error => {
                 console.log(error);
                 message.reply("Unable to execute action, this bug was reported to my developper !");
-            })
-
-
+            });
     }
+
 }

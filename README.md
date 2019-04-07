@@ -1,4 +1,7 @@
-![Hanekawa](https://i.imgur.com/pgOdBgP.png)
+<div align="center">
+    <img src="https://i.imgur.com/pgOdBgP.png">
+</div>
+
 # Hanekawa - Free and opensource music bot for Discord
 
 Hanekawa (from the anime "Bakemonogatari") is a music bot for Discord, free and open source. It allows you to play radios or musics from Youtube.com
