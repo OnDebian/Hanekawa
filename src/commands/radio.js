@@ -20,12 +20,16 @@ module.exports = {
             .then(conn => {
                 let playerConfig = player.getPlayerConfig(message.guild.id);
                 let dispatcher = conn.playArbitraryInput(radio.url, {volume: parseInt(playerConfig.volume)/100});
+                player.enableRadio(message.guild.id);
                 message.channel.send(
                     new RichEmbed()
                         .setDescription(`Streaming ${radio.title}'s radio ♪`)
                         .setColor(config.global.color)
                 );
-                dispatcher.on("end", () => message.guild.member(client.user).voiceChannel.leave());
+                dispatcher.on("end", () => {
+                    player.disableRadio(message.guild.id);
+                    message.guild.member(client.user).voiceChannel.leave()
+                });
             })
             .catch(error => {
                 console.log(error);
