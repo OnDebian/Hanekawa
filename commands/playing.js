@@ -14,7 +14,7 @@ module.exports = {
         if (!message.guild.member(client.user).voiceChannel) return message.reply(`${message.guild.member(client.user).displayName} is not in a voice channel`);
         if (!player.getPlayerConfig(message.guild.id).now_playing) return message.reply(`Sorry but I can't get played music`);
         if (typeof player.getPlayerConfig(message.guild.id).now_playing == "string") {
-            let radio = player.getRadios().get(now_playing);
+            let radio = player.getRadios().get(player.getPlayerConfig(message.guild.id).now_playing);
             return message.channel.send(
                 new RichEmbed()
                     .setDescription(`${message.guild.member(client.user).displayName} stream ${radio.title}'s radio !`)
