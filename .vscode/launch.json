@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Start debug",
-            "program": "${workspaceFolder}\\src\\index.js"
+            "program": "${workspaceFolder}\\index.js"
         }
     ]
 }

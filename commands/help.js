@@ -15,7 +15,7 @@ module.exports = {
             return message.channel.send(
                 new RichEmbed()
                     .setAuthor(`${client.user.username} - Help`, client.user.avatarURL)
-                    .setDescription(`List of avaliables commands :\n\n${commands.map(c => `**${config.global.prefix}${c.name}`).join("\n")}\n\nFor see help about a command, tape ${config.global.prefix}help <command>`)
+                    .setDescription(`List of avaliables commands :\n\n${commands.map(c => `**${config.global.prefix}${c.name}**`).join("\n")}\n\nFor see help about a command, tape ${config.global.prefix}help <command>`)
                     .setColor(config.global.color)
                     .setTimestamp(new Date())
                     .setFooter(`Command send by ${message.author.tag}`, message.author.avatarURL)

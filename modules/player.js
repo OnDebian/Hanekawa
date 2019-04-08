@@ -33,42 +33,43 @@ function emptyQueue(guildID) {
 }
 
 function addToQueue(guildID, url) {
-    if (!queue.get(guildID)) queue.set(guildID, []);
-    let _queue = queue.get(guildID);
+    let _queue = getQueue(guildID);
     _queue.push(url);
     queue.set(guildID, _queue);
 }
 
 function shiftMusic(guildID) {
-    if (!queue.get(guildID)) queue.set(guildID, []);
-    let _queue = queue.get(guildID);
+    let _queue = getQueue(guildID);
     _queue.shift();
     queue.set(guildID, _queue);
 }
 
 function getPlayerConfig(guildID) {
-    if (!playerConfig.get(guildID)) playerConfig.set(guildID, { volume: 20, radio: false });
+    if (!playerConfig.get(guildID)) playerConfig.set(guildID, { volume: 20, radio: false, now_playing: null });
     return playerConfig.get(guildID);
 }
 
 function setVolume(guildID, volume) {
-    if (!playerConfig.get(guildID)) return playerConfig.set(guildID, { volume: 20, radio: false });
-    let _playerConfig = playerConfig.get(guildID);
+    let _playerConfig = getPlayerConfig(guildID);
     _playerConfig.volume = volume;
     playerConfig.set(guildID, _playerConfig);
 }
 
 function enableRadio(guildID) {
-    if (!playerConfig.get(guildID)) return playerConfig.set(guildID, { volume: 20, radio: false });
-    let _playerConfig = playerConfig.get(guildID);
+    let _playerConfig = getPlayerConfig(guildID);
     _playerConfig.radio = true;
     playerConfig.set(guildID, _playerConfig);
 }
 
 function disableRadio(guildID) {
-    if (!playerConfig.get(guildID)) return playerConfig.set(guildID, { volume: 20, radio: false });
-    let _playerConfig = playerConfig.get(guildID);
+    let _playerConfig = getPlayerConfig(guildID);
     _playerConfig.radio = false;
+    playerConfig.set(guildID, _playerConfig);
+}
+
+function setPlaying(playing) {
+    let _playerConfig = getPlayerConfig(guildID);
+    _playerConfig.now_playing = playing;
     playerConfig.set(guildID, _playerConfig);
 }
 
@@ -92,11 +93,14 @@ async function playSong(client, message, url) {
             .setFooter(`Command send by ${message.author.tag}`, message.author.avatarURL)
     );
 
+    setPlaying({name: infos.title, channel: infos.author.name, duration: durationForm(infos.length_seconds), img: infos.thumbnail_url});
+
     dispatcher.on("end", () => {
         if(getQueue(message.guild.id).length > 0){
             playSong(client, message, getQueue(message.guild.id)[0].url);
             shiftMusic(message.guild.id);
         }else{
+            setPlaying(null);
             message.guild.member(client.user).voiceChannel.leave();
         }
     });
@@ -114,5 +118,6 @@ module.exports = {
     shiftMusic: shiftMusic,
     playSong: playSong,
     enableRadio: enableRadio,
-    disableRadio: disableRadio
+    disableRadio: disableRadio,
+    setPlaying: setPlaying
 }
