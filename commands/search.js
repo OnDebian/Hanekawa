@@ -7,8 +7,9 @@ module.exports = {
 
     name: "search",
     aliases: ["youtube", "yt"],
+    usage: "<search arguments>",
+    description: "Search a video on Youtube",
     guildOnly: false,
-    adminsOnly: false,
     execute: async (client, message, args) => {
 
         if (!args[0]) return message.reply("No search provided");

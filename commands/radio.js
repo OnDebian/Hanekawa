@@ -7,8 +7,9 @@ module.exports = {
 
     name: "radio",
     aliases: ["stream"],
+    usage: "<radio name>",
+    description: "Play a radio",
     guildOnly: true,
-    adminsOnly: false,
     execute: (client, message, args) => {
         if(!args[0]) return message.reply("No radio provided");
         let radio = player.getRadios().get(args[0]);
@@ -28,7 +29,7 @@ module.exports = {
                 );
                 dispatcher.on("end", () => {
                     player.disableRadio(message.guild.id);
-                    message.guild.member(client.user).voiceChannel.leave()
+                    message.guild.member(client.user).voiceChannel.leave();
                 });
             })
             .catch(error => {

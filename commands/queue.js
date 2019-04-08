@@ -7,8 +7,9 @@ module.exports = {
 
     name: "queue",
     aliases: ["qlist", "queue_list"],
+    usage: "",
+    description: "Show queue",
     guildOnly: true,
-    adminsOnly: false,
     execute: (client, message, args) => {
         let queue = player.getQueue(message.guild.id);
         let unfocus = 0;
@@ -26,9 +27,7 @@ module.exports = {
         message.channel.send(
             new RichEmbed()
                 .setAuthor(`${client.user.username} - Music`, client.user.avatarURL)
-                .setDescription(`Music(s) in queue
-                ${queue_show.join("\n\n")}
-                `)
+                .setDescription(`Music(s) in queue\n\n${queue_show.join("\n\n")}`)
                 .setThumbnail(queue[0].img)
                 .setColor(config.global.color)
                 .setTimestamp(new Date())

@@ -68,7 +68,7 @@ function enableRadio(guildID) {
 function disableRadio(guildID) {
     if (!playerConfig.get(guildID)) return playerConfig.set(guildID, { volume: 20, radio: false });
     let _playerConfig = playerConfig.get(guildID);
-    _playerConfig.radio = true;
+    _playerConfig.radio = false;
     playerConfig.set(guildID, _playerConfig);
 }
 

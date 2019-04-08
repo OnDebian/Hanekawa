@@ -7,8 +7,9 @@ module.exports = {
 
     name: "volume",
     aliases: ["vol"],
+    usage: "<1-100>%",
+    description: "Adjust the volume of musics",
     guildOnly: true,
-    adminsOnly: false,
     execute: (client, message, args) => {
         if(!message.member.voiceChannel) return message.reply("You are not in a voice channel");
         if(!message.guild.member(client.user).voiceChannel) return message.reply(`${message.guild.member(client.user).displayName} is not in a voice channel`);

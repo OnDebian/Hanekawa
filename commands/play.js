@@ -9,8 +9,9 @@ module.exports = {
 
     name: "play",
     aliases: [],
+    usage: "<url or search arguments>",
+    description: "Play music or add it in queue",
     guildOnly: true,
-    adminsOnly: false,
     execute: async (client, message, args) => {
         if (!message.member.voiceChannel) return message.reply("You are not in a voice channel");
         if (!args[0]) return message.reply("No url or search provided");

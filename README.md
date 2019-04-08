@@ -11,6 +11,9 @@ Hanekawa (from the anime "Bakemonogatari") is a music bot for Discord, free and 
 ### Prerequisites
 
 - Node.JS
+- FFmpeg
+- Make (for install node-opus)
+- G++ (for install node-opus)
 
 ### Installing
 

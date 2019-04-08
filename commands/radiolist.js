@@ -7,14 +7,15 @@ module.exports = {
 
     name: "radiolist",
     aliases: ["rlist", "radio_list"],
+    usage: "",
+    description: "Show list of avaliable radios",
     guildOnly: false,
-    adminsOnly: false,
     execute: (client, message, args) => {
         let radios = player.getRadios();
 
         message.channel.send(
             new RichEmbed()
-                .setAuthor(`${client.user.username} - List of radios`, client.user.avatarURL)
+                .setAuthor(`${client.user.username} - Radio`, client.user.avatarURL)
                 .setDescription(`List of avaliables radios :\n\n${config.radios.map(r => `${r.title} ~ ${config.global.prefix}radio ${r.name}`).join("\n")}`)
                 .setColor(config.global.color)
                 .setTimestamp(new Date())
