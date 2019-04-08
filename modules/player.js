@@ -67,7 +67,7 @@ function disableRadio(guildID) {
     playerConfig.set(guildID, _playerConfig);
 }
 
-function setPlaying(playing) {
+function setPlaying(guildID, playing) {
     let _playerConfig = getPlayerConfig(guildID);
     _playerConfig.now_playing = playing;
     playerConfig.set(guildID, _playerConfig);
@@ -93,14 +93,14 @@ async function playSong(client, message, url) {
             .setFooter(`Command send by ${message.author.tag}`, message.author.avatarURL)
     );
 
-    setPlaying({name: infos.title, channel: infos.author.name, duration: durationForm(infos.length_seconds), img: infos.thumbnail_url});
+    setPlaying(message.guild.id, {name: infos.title, channel: infos.author.name, duration: durationForm(infos.length_seconds), img: infos.thumbnail_url});
 
     dispatcher.on("end", () => {
         if(getQueue(message.guild.id).length > 0){
             playSong(client, message, getQueue(message.guild.id)[0].url);
             shiftMusic(message.guild.id);
         }else{
-            setPlaying(null);
+            setPlaying(message.guild.id, null);
             message.guild.member(client.user).voiceChannel.leave();
         }
     });

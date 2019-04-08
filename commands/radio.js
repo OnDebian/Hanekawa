@@ -19,7 +19,7 @@ module.exports = {
         if(message.guild.member(client.user).voiceChannel && message.guild.member(client.user).voiceChannel.connection) message.guild.member(client.user).voiceChannel.connection.dispatcher.end();
         message.member.voiceChannel.join()
             .then(conn => {
-                player.setPlaying(args[0]);
+                player.setPlaying(message.guild.id, args[0]);
                 let playerConfig = player.getPlayerConfig(message.guild.id);
                 let dispatcher = conn.playArbitraryInput(radio.url, {volume: parseInt(playerConfig.volume)/100});
                 player.enableRadio(message.guild.id);
@@ -29,7 +29,7 @@ module.exports = {
                         .setColor(config.global.color)
                 );
                 dispatcher.on("end", () => {
-                    player.setPlaying(null);
+                    player.setPlaying(message.guild.id, null);
                     player.disableRadio(message.guild.id);
                     message.guild.member(client.user).voiceChannel.leave();
                 });
