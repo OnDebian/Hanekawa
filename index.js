@@ -39,6 +39,6 @@ client.on("message", (message) => {
 
 });
 
-client.on("error", console.log(err));
+client.on("error", (err) => console.log(err));
 
 client.login(config.global.token);
