@@ -24,7 +24,7 @@ client.on("message", (message) => {
     if (!message.content.startsWith(config.global.prefix) || message.author.bot) return;
 
     const
-        args = message.content.slice(config.global.prefix.length).trim().split(/ +/g),
+        args = message.content.trim().slice(config.global.prefix.length).split(/ +/g),
         commandName = args.shift().toLowerCase(),
         command = commands.get(commandName) || commands.find(c => c.aliases.includes(commandName));
 
@@ -38,5 +38,7 @@ client.on("message", (message) => {
     }
 
 });
+
+client.on("error", console.log(err));
 
 client.login(config.global.token);
