@@ -1,30 +1,21 @@
-const path = require("path")
-    , fs = require("fs")
-    , commands = {};
+const fs = require("fs")
+    , path = require("path")
+    , commands = [];
 
-module.exports = () => {
+function loadCommands(category = "miscellaneous") {
     return new Promise((resolve, reject) => {
-        if (!fs.existsSync(path.resolve(__dirname, "../commands"))) return resolve(commands);
-        fs.readdir(path.resolve(__dirname, "../commands"), {}, (err, items) => {
-            if (err) return reject(new Error("Unable to read commands folder"));
-            if(items.length < 1) return resolve(commands);
-            items.forEach((item, index) => {
-                const categoryFolder = path.resolve(__dirname, "../commands", item);
-                if (fs.lstatSync(categoryFolder).isDirectory()) {
-                    fs.readdir(categoryFolder, {}, (err, files) => {
-                        if (err) return reject(new Error("Unable to read commands folder"));
-                        files.forEach(file => {
-                            const filePath = path.resolve(__dirname, "../commands", item, file);
-                            if (fs.lstatSync(filePath).isFile() && file.endsWith(".js")) {
-                                const command = require(filePath);
-                                if (command.name) return;
-                                command.category = item;
-                                commands[command.name] = command;
-                            }
-                        });
-                    });
+        const commandsPath = path.resolve(__dirname, "../commands/" + category);
+        if (!fs.existsSync(commandsPath)) return resolve(commands);
+        fs.readdir(commandsPath, (err, files) => {
+            if (err) return reject(new Error(`Unable to load ${category} commands category`));
+            if (files.length < 1) return resolve(commands);
+            files.forEach((file, index) => {
+                const commandPath = path.resolve(__dirname, "../commands/" + category + "/" + file);
+                if (fs.lstatSync(commandPath).isFile() && file.endsWith(".js")) {
+                    const command = new (require(commandPath));
+                    commands.push(command);
                 }
-                if ((index + 1) === items.length) {
+                if ((index + 1) === files.length) {
                     resolve(commands);
                 }
             });
@@ -32,3 +23,7 @@ module.exports = () => {
     });
 }
 
+module.exports = {
+    commands,
+    loadCommands
+};
